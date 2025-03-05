@@ -44,4 +44,4 @@ jobs:
           }' "${{ secrets.CLASP_ACCESS_TOKEN }}" "${{ secrets.CLASP_REFRESH_TOKEN }}" "${{ secrets.CLASP_CLIENTID }}" "${{ secrets.CLASP_CLIENTSECRET }}" > ~/.clasprc.json
 
       - name: Deploy GAS
-        run: clasp push
+        run: clasp push -f
