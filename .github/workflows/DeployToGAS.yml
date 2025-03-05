@@ -1,0 +1,47 @@
+name: Deploy GAS
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install clasp
+        run: npm install -g @google/clasp
+
+      - name: Configure clasp
+        run: |
+          printf '{
+            "scriptId": "%s",
+            "rootDir": "src"
+          }' "${{ secrets.GAS_SCRIPT_ID }}" > .clasp.json
+
+          printf '{
+            "token": {
+              "access_token": "%s",
+              "token_type": "Bearer",
+              "expiry_date": 1620870307822,
+              "refresh_token": "%s"
+            },
+            "oauth2ClientSettings": {
+              "clientId": "%s",
+              "clientSecret": "%s",
+              "redirectUri": "http://localhost"
+            },
+            "isLocalCreds": false
+          }' "${{ secrets.CLASP_ACCESS_TOKEN }}" "${{ secrets.CLASP_REFRESH_TOKEN }}" "${{ secrets.CLASP_CLIENTID }}" "${{ secrets.CLASP_CLIENTSECRET }}" > ~/.clasprc.json
+
+      - name: Deploy GAS
+        run: clasp push
