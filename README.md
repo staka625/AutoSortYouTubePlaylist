@@ -1,3 +1,34 @@
+# AutoSortYouTubePlaylist
+
+## 概要
+
+YouTube プレイリストを自動的にソートするための Google Apps Script (GAS) です。
+指定したプレイリストの動画を、動画名やチャンネル名などのキーに基づいて並び替えんます。
+また、プレイリストの更新を Discord に通知する機能も備えています。
+
+## 注意
+
+使用している YouTube Data API v3 は、1 日に 10000 トークン使用可能です。
+動画の取得には 1 トークン、変更には 50 トークンかかります。
+そのため、100 個以上の動画を含むプレイリストの場合、トークンの上限に達する可能性があります。
+
+## 使用技術
+
+- Google Apps Script (GAS)
+- YouTube Data API v3
+- Discord Webhook
+- Node.js
+- clasp (Command Line Apps Script Projects)
+- GitHub Actions
+- Google Sheets
+- PowerShell (for installation commands)
+- GitHub Secrets
+- OAuth 2.0 (for clasp authentication)
+- Winget (Windows Package Manager)
+- npm (Node Package Manager)
+- JSON (for clasp configuration)
+- Markdown (for documentation)
+
 ## GAS 導入手順
 
 1. Google Spreadsheet を作成します。
@@ -31,7 +62,7 @@
 6. App Script を作成する。
    ![Image](https://github.com/user-attachments/assets/0030115e-6fd6-4a41-a674-ab0a5b2facd5)
 
-7. サービスの Youtube Data Api v3 を追加。
+7. サービスの Youtube Data API v3 を追加。
    ![Image](https://github.com/user-attachments/assets/e125f4f3-3617-4e99-b535-dcb77311ad02)
 
 8. 本リポジトリの.gs コードを貼り付ける。
