@@ -93,6 +93,76 @@ function sortYouTubePlaylist() {
 }
 
 /**
+ * 設定シートから設定情報を取得する
+ * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet 設定シート
+ * @return {Object} 設定情報のオブジェクト
+ */
+function getSettings(sheet) {
+  const data = sheet.getDataRange().getValues();
+  const settings = {};
+  for (let i = 0; i < data.length; i++) {
+    settings[data[i][0]] = data[i][1];
+  }
+  return settings;
+}
+
+/**
+ * YouTubeプレイリストの動画情報を取得する
+ * @param {string} playlistId プレイリストID
+ * @return {Array<Object>} 動画情報の配列
+ */
+function fetchPlaylistItems(playlistId) {
+  const items = [];
+  let nextPageToken = null;
+
+  do {
+    const response = YouTube.PlaylistItems.list("id,snippet", {
+      playlistId: playlistId,
+      maxResults: 50,
+      pageToken: nextPageToken,
+    });
+
+    if (response.items) {
+      response.items.forEach((item) => {
+        const snippet = item.snippet;
+        items.push({
+          id: item.id,
+          videoId: snippet.resourceId.videoId,
+          動画名: snippet.title,
+          チャンネル名: snippet.videoOwnerChannelTitle || "不明",
+          アルバム: snippet.description || "",
+          URL: "https://www.youtube.com/watch?v=${snippet.resourceId.videoId}",
+          snippet: snippet,
+        });
+      });
+    }
+
+    nextPageToken = response.nextPageToken;
+  } while (nextPageToken);
+
+  return items;
+}
+
+/**
+ * スプレッドシートにプレイリスト情報を書き込む
+ * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet データシート
+ * @param {Array<Object>} items プレイリスト情報の配列
+ */
+function writePlaylistToSheet(sheet, items) {
+  sheet.clear();
+  sheet.appendRow(["VideoID", "曲名", "アーティスト名", "アルバム", "URL"]);
+  items.forEach((item) => {
+    sheet.appendRow([
+      item.videoId,
+      item.曲名,
+      item.アーティスト名,
+      item.アルバム,
+      item.URL,
+    ]);
+  });
+}
+
+/**
  * 並び替えた配列に従い、各アイテムのpositionを更新する
  * @param {Array<Object>} sortedItems 並び替え済みのアイテム配列
  * @return {Object} 更新結果の統計情報

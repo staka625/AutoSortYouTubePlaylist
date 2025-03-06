@@ -136,4 +136,6 @@ DiscordWebhook を指定することで、プレイリストが更新される�
 
     ![Image](https://github.com/user-attachments/assets/3f4d45ff-8330-4f8b-ab3e-77bbfe0288a9)
 
-4.  `release`の published、または`workflow_dispatch`をトリガーとして GAS にコードがデプロイされる。
+4.  GAS API を有効にする。
+    ![Image](https://github.com/user-attachments/assets/0e5f8ba1-02c6-4a2c-8b44-4c1ea251216c)
+5.  `release`の published、または`workflow_dispatch`をトリガーとして GAS にコードがデプロイされる。
